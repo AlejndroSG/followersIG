@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: followersig_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: followersig_backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - JWT_SECRET=your_jwt_secret_key_here
+      - JWT_EXPIRATION=7d
+      # Descomentar cuando se implemente MongoDB
+      # - MONGODB_URI=mongodb://mongo:27017/followersig
+    # Descomentar cuando se implemente MongoDB
+    # depends_on:
+    #   - mongo
+    networks:
+      - app_network
+
+  # Descomentar cuando se necesite MongoDB
+  # mongo:
+  #   image: mongo:5
+  #   container_name: followersig_mongo
+  #   restart: unless-stopped
+  #   volumes:
+  #     - mongo_data:/data/db
+  #   networks:
+  #     - app_network
+  #   # No exponemos el puerto por defecto para proteger MongoDB
+
+networks:
+  app_network:
+    driver: bridge
+
+# Descomentar cuando se necesite MongoDB
+# volumes:
+#   mongo_data:
