@@ -55,9 +55,6 @@ export default function InstagramSignupForm({ onSuccess }: InstagramSignupFormPr
     }
   });
 
-  // Para usos futuros si necesitamos observar cambios en la categoría
-  // const selectedCategory = watch('category');
-
   // Procesar el envío del formulario
   const onSubmit = async (data: FormValues) => {
     setIsLoading(true);
@@ -79,76 +76,89 @@ export default function InstagramSignupForm({ onSuccess }: InstagramSignupFormPr
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Usuario de Instagram */}
-      <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-          Usuario de Instagram <span className="text-red-500">*</span>
-        </label>
-        <div className="relative mt-1 rounded-md shadow-sm">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <span className="text-gray-500 sm:text-sm">@</span>
-          </div>
-          <input
-            type="text"
-            id="username"
-            className={`block w-full pl-8 pr-3 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
-              errors.username ? 'border-red-300' : 'border-gray-300'
-            }`}
-            placeholder="tuusuario"
-            {...register('username', {
-              required: 'El nombre de usuario es obligatorio',
-              pattern: {
-                value: /^[a-zA-Z0-9._]+$/,
-                message: 'Ingresa un nombre de usuario de Instagram válido'
-              }
-            })}
-          />
+    <div className="bg-gradient-to-br from-white to-purple-50 p-8 rounded-2xl shadow-xl border border-gray-100">
+      <div className="flex justify-center mb-6">
+        <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="18" cy="6" r="1.5"></circle>
+          </svg>
         </div>
-        {errors.username && (
-          <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
-        )}
       </div>
+      
+      <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">Potencia tu cuenta de Instagram</h2>
+      <p className="text-center text-gray-500 mb-8">Accede a estadísticas avanzadas y herramientas de crecimiento</p>
+      
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {/* Usuario de Instagram */}
+        <div>
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+            Usuario de Instagram <span className="text-red-500">*</span>
+          </label>
+          <div className="relative rounded-xl">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+              <span className="text-gray-500">@</span>
+            </div>
+            <input
+              type="text"
+              id="username"
+              className={`block w-full pl-8 pr-4 py-3 border rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                errors.username ? 'border-red-300' : 'border-gray-200'
+              }`}
+              placeholder="tuusuario"
+              {...register('username', {
+                required: 'El nombre de usuario es obligatorio',
+              })}
+            />
+          </div>
+          {errors.username && (
+            <p className="mt-1 text-sm text-red-500">{errors.username.message}</p>
+          )}
+        </div>
 
-      {/* Correo electrónico */}
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          Correo electrónico <span className="text-red-500">*</span>
-        </label>
-        <div className="mt-1">
+        {/* Email */}
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            Email <span className="text-red-500">*</span>
+          </label>
           <input
             type="email"
             id="email"
-            className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
-              errors.email ? 'border-red-300' : 'border-gray-300'
+            className={`block w-full px-4 py-3 border rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+              errors.email ? 'border-red-300' : 'border-gray-200'
             }`}
+            placeholder="tucorreo@ejemplo.com"
             {...register('email', {
-              required: 'El correo electrónico es obligatorio',
+              required: 'El email es obligatorio',
               pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Ingresa un correo electrónico válido'
-              }
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Email inválido',
+              },
             })}
           />
+          {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
         </div>
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-        )}
-      </div>
 
-      {/* Categoría */}
-      <div>
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-          Categoría principal de tu cuenta <span className="text-red-500">*</span>
-        </label>
-        <div className="mt-1">
+        {/* Categoría */}
+        <div>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+            Categoría de tu cuenta <span className="text-red-500">*</span>
+          </label>
           <select
             id="category"
-            className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
-              errors.category ? 'border-red-300' : 'border-gray-300'
+            className={`block w-full px-4 py-3 border rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white ${
+              errors.category ? 'border-red-300' : 'border-gray-200'
             }`}
+            style={{ 
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, 
+              backgroundPosition: 'right 0.75rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '2.5rem'
+            }}
             {...register('category', {
-              required: 'Selecciona una categoría'
+              required: 'Selecciona una categoría',
             })}
           >
             <option value="">Selecciona una categoría</option>
@@ -158,54 +168,64 @@ export default function InstagramSignupForm({ onSuccess }: InstagramSignupFormPr
               </option>
             ))}
           </select>
+          {errors.category && (
+            <p className="mt-1 text-sm text-red-500">{errors.category.message}</p>
+          )}
         </div>
-        {errors.category && (
-          <p className="mt-1 text-sm text-red-600">{errors.category.message}</p>
-        )}
-      </div>
 
-      {/* Número de seguidores */}
-      <div>
-        <label htmlFor="followers" className="block text-sm font-medium text-gray-700">
-          Número aproximado de seguidores <span className="text-red-500">*</span>
-        </label>
-        <div className="mt-1">
+        {/* Seguidores */}
+        <div>
+          <label htmlFor="followers" className="block text-sm font-medium text-gray-700 mb-1">
+            Número aproximado de seguidores <span className="text-red-500">*</span>
+          </label>
           <select
             id="followers"
-            className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
-              errors.followers ? 'border-red-300' : 'border-gray-300'
+            className={`block w-full px-4 py-3 border rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white ${
+              errors.followers ? 'border-red-300' : 'border-gray-200'
             }`}
+            style={{ 
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, 
+              backgroundPosition: 'right 0.75rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '2.5rem'
+            }}
             {...register('followers', {
-              required: 'Selecciona un rango de seguidores'
+              required: 'Selecciona un rango de seguidores',
             })}
           >
             <option value="">Selecciona un rango</option>
-            <option value="0-1k">0 - 1,000</option>
-            <option value="1k-5k">1,000 - 5,000</option>
-            <option value="5k-10k">5,000 - 10,000</option>
-            <option value="10k-50k">10,000 - 50,000</option>
-            <option value="50k-100k">50,000 - 100,000</option>
-            <option value="100k+">Más de 100,000</option>
+            <option value="0-1000">0 - 1,000</option>
+            <option value="1000-5000">1,000 - 5,000</option>
+            <option value="5000-10000">5,000 - 10,000</option>
+            <option value="10000-50000">10,000 - 50,000</option>
+            <option value="50000-100000">50,000 - 100,000</option>
+            <option value="100000+">Más de 100,000</option>
           </select>
+          {errors.followers && (
+            <p className="mt-1 text-sm text-red-500">{errors.followers.message}</p>
+          )}
         </div>
-        {errors.followers && (
-          <p className="mt-1 text-sm text-red-600">{errors.followers.message}</p>
-        )}
-      </div>
 
-      {/* Objetivos */}
-      <div>
-        <label htmlFor="goals" className="block text-sm font-medium text-gray-700">
-          ¿Cuál es tu principal objetivo? <span className="text-red-500">*</span>
-        </label>
-        <div className="mt-1">
+        {/* Objetivos */}
+        <div>
+          <label htmlFor="goals" className="block text-sm font-medium text-gray-700 mb-1">
+            Objetivo principal <span className="text-red-500">*</span>
+          </label>
           <select
             id="goals"
-            className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
-              errors.goals ? 'border-red-300' : 'border-gray-300'
+            className={`block w-full px-4 py-3 border rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none bg-white ${
+              errors.goals ? 'border-red-300' : 'border-gray-200'
             }`}
+            style={{ 
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, 
+              backgroundPosition: 'right 0.75rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '2.5rem'
+            }}
             {...register('goals', {
-              required: 'Selecciona un objetivo'
+              required: 'Selecciona un objetivo',
             })}
           >
             <option value="">Selecciona un objetivo</option>
@@ -216,92 +236,78 @@ export default function InstagramSignupForm({ onSuccess }: InstagramSignupFormPr
             <option value="community">Construir comunidad</option>
             <option value="other">Otro</option>
           </select>
+          {errors.goals && (
+            <p className="mt-1 text-sm text-red-500">{errors.goals.message}</p>
+          )}
         </div>
-        {errors.goals && (
-          <p className="mt-1 text-sm text-red-600">{errors.goals.message}</p>
-        )}
-      </div>
 
-      {/* Sitio web (opcional) */}
-      <div>
-        <label htmlFor="website" className="block text-sm font-medium text-gray-700">
-          Sitio web o enlace en bio (opcional)
-        </label>
-        <div className="mt-1">
+        {/* Sitio web (opcional) */}
+        <div>
+          <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">
+            Sitio web o enlace en bio (opcional)
+          </label>
           <input
             type="url"
             id="website"
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+            className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm transition-all focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             placeholder="https://ejemplo.com"
             {...register('website')}
           />
         </div>
-      </div>
 
-      {/* Términos y condiciones */}
-      <div className="flex items-start">
-        <div className="flex items-center h-5">
-          <input
-            id="termsAccepted"
-            type="checkbox"
-            className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
-            {...register('termsAccepted', {
-              required: 'Debes aceptar los términos y condiciones'
-            })}
-          />
+        {/* Términos y condiciones */}
+        <div className="flex items-start pt-2">
+          <div className="flex items-center h-5">
+            <input
+              id="termsAccepted"
+              type="checkbox"
+              className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+              {...register('termsAccepted', {
+                required: 'Debes aceptar los términos y condiciones',
+              })}
+            />
+          </div>
+          <div className="ml-3 text-sm">
+            <label htmlFor="termsAccepted" className="font-medium text-gray-700">
+              Acepto los términos y condiciones <span className="text-red-500">*</span>
+            </label>
+            <p className="text-gray-500">
+              Al registrarte, aceptas nuestros{' '}
+              <a href="#" className="text-purple-600 hover:text-purple-500 hover:underline">
+                Términos de servicio
+              </a>{' '}
+              y{' '}
+              <a href="#" className="text-purple-600 hover:text-purple-500 hover:underline">
+                Política de privacidad
+              </a>
+            </p>
+            {errors.termsAccepted && (
+              <p className="mt-1 text-sm text-red-500">{errors.termsAccepted.message}</p>
+            )}
+          </div>
         </div>
-        <div className="ml-3 text-sm">
-          <label htmlFor="termsAccepted" className="font-medium text-gray-700">
-            Acepto los términos y condiciones <span className="text-red-500">*</span>
-          </label>
-          <p className="text-gray-500">
-            Al registrarte, aceptas nuestros{' '}
-            <a href="#" className="text-primary-600 hover:text-primary-500">
-              Términos de servicio
-            </a>{' '}
-            y{' '}
-            <a href="#" className="text-primary-600 hover:text-primary-500">
-              Política de privacidad
-            </a>
-          </p>
-          {errors.termsAccepted && (
-            <p className="mt-1 text-sm text-red-600">{errors.termsAccepted.message}</p>
-          )}
+
+        {/* Botón de envío */}
+        <div className="pt-4">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-md text-base font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 disabled:opacity-70"
+          >
+            {isLoading ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Procesando...
+              </>
+            ) : (
+              'Potencia mi cuenta ahora'
+            )}
+          </button>
         </div>
-      </div>
-
-      {/* Botón de envío */}
-      <div className="pt-4">
-        <button
-          type="submit"
-          disabled={isLoading}
-          className={`w-full px-6 py-3 text-base font-medium text-white border border-transparent rounded-md shadow-sm ${
-            isLoading
-              ? 'bg-primary-400 cursor-not-allowed'
-              : 'bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
-          }`}
-        >
-          {isLoading ? (
-            <div className="flex items-center justify-center">
-              <svg className="w-5 h-5 mr-3 -ml-1 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Procesando...
-            </div>
-          ) : (
-            'Potencia mi cuenta ahora'
-          )}
-        </button>
-      </div>
-
-      {/* Texto de protección de datos */}
-      <div className="mt-4 text-sm text-center text-gray-500">
-        <p>
-          Tus datos están seguros y no compartiremos tu información con terceros.
-          Usamos medidas de seguridad avanzadas para proteger tu cuenta.
-        </p>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

@@ -11,7 +11,11 @@ import {
   HomeIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
-// Usamos un logo de texto en lugar de una imagen para evitar problemas de construcción
+
+// Utilidad para combinar nombres de clase
+function classNames(...classes: string[]): string {
+  return classes.filter(Boolean).join(' ');
+}
 
 // Configuración de navegación
 const navigation = [
@@ -26,6 +30,11 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   
+  // Determinar la ruta activa
+  const isPathActive = (path: string): boolean => {
+    return location.pathname === path;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar móvil */}
@@ -55,54 +64,63 @@ export default function Layout() {
             >
               <Dialog.Panel className="relative flex flex-1 w-full max-w-xs mr-16">
                 <div className="flex flex-col flex-1 overflow-y-auto bg-white shadow-lg">
-                  <div className="flex items-center justify-between flex-shrink-0 h-16 px-6">
+                  <div className="flex items-center justify-between h-16 px-6 bg-gradient-to-r from-purple-600 to-indigo-600">
                     <div className="flex items-center">
-                      <div className="flex items-center justify-center w-8 h-8 bg-primary-600 rounded-md text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                      <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                          <circle cx="12" cy="12" r="4"></circle>
+                          <circle cx="18" cy="6" r="1.5"></circle>
                         </svg>
                       </div>
-                      <span className="ml-2 text-xl font-bold text-primary-600">FollowersIG</span>
+                      <span className="ml-3 text-xl font-bold text-white tracking-wide">FollowersIG</span>
                     </div>
                     <button
                       type="button"
-                      className="text-gray-500 hover:text-gray-900"
+                      className="text-white hover:text-gray-200 transition-colors"
                       onClick={() => setSidebarOpen(false)}
                     >
                       <XMarkIcon className="w-6 h-6" aria-hidden="true" />
                     </button>
                   </div>
-                  <nav className="flex flex-col flex-1 px-4 py-4 space-y-1">
+                  <div className="flex flex-col flex-1 p-4 space-y-2 bg-gray-50">
                     {navigation.map((item) => {
-                      const isActive = location.pathname === item.href;
+                      const isActive = isPathActive(item.href);
                       return (
                         <Link
                           key={item.name}
                           to={item.href}
-                          className={`
-                            flex items-center px-3 py-2 text-sm font-medium rounded-md
-                            ${isActive 
-                              ? 'bg-primary-100 text-primary-600' 
-                              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'}
-                          `}
+                          className={classNames(
+                            isActive
+                              ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md'
+                              : 'text-gray-700 hover:text-purple-700 hover:bg-white hover:shadow-md',
+                            'flex items-center gap-x-3 rounded-xl p-3 font-medium transition-all duration-200'
+                          )}
                           onClick={() => setSidebarOpen(false)}
                         >
-                          <item.icon 
-                            className={`mr-3 h-5 w-5 flex-shrink-0 ${isActive ? 'text-primary-600' : 'text-gray-500'}`} 
-                          />
-                          {item.name}
+                          <div className={classNames(
+                            isActive 
+                              ? 'bg-white/20 text-white' 
+                              : 'bg-purple-100 text-purple-600 group-hover:bg-purple-200',
+                            'flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-200'
+                          )}>
+                            <item.icon className="h-5 w-5 shrink-0" />
+                          </div>
+                          <span>{item.name}</span>
                         </Link>
                       );
                     })}
-                    <div className="pt-4 mt-auto border-t border-gray-200">
+                    <div className="pt-4 mt-auto">
                       <button
-                        className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 hover:text-gray-900"
+                        className="flex items-center w-full p-3 text-gray-700 rounded-xl hover:bg-white hover:shadow-md hover:text-purple-700 transition-all duration-200"
                       >
-                        <ArrowRightOnRectangleIcon className="w-5 h-5 mr-3 text-gray-500" />
-                        Cerrar Sesión
+                        <div className="flex items-center justify-center w-8 h-8 bg-red-100 text-red-600 rounded-lg">
+                          <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                        </div>
+                        <span className="ml-3 font-medium">Cerrar Sesión</span>
                       </button>
                     </div>
-                  </nav>
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -111,45 +129,54 @@ export default function Layout() {
       </Transition.Root>
 
       {/* Sidebar estático para escritorio */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-1 min-h-0 bg-white border-r border-gray-200">
-          <div className="flex items-center h-16 px-6 border-b border-gray-200 flex-shrink-0">
-            <div className="flex items-center justify-center w-8 h-8 bg-primary-600 rounded-md text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="flex flex-col flex-1 min-h-0 shadow-xl">
+          <div className="flex items-center h-16 px-6 border-b border-gray-200 flex-shrink-0 bg-gradient-to-r from-purple-600 to-indigo-600">
+            <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <circle cx="12" cy="12" r="4"></circle>
+                <circle cx="18" cy="6" r="1.5"></circle>
               </svg>
             </div>
-            <span className="ml-2 text-xl font-bold text-primary-600">FollowersIG</span>
+            <span className="ml-3 text-xl font-bold text-white tracking-wide">FollowersIG</span>
           </div>
-          <div className="flex flex-col flex-1 overflow-y-auto">
-            <nav className="flex-1 px-4 py-4 space-y-1">
+          <div className="flex flex-col flex-1 overflow-y-auto bg-white">
+            <nav className="flex-1 p-6 space-y-3">
               {navigation.map((item) => {
-                const isActive = location.pathname === item.href;
+                const isActive = isPathActive(item.href);
                 return (
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`
-                      flex items-center px-3 py-2 text-sm font-medium rounded-md
-                      ${isActive 
-                        ? 'bg-primary-100 text-primary-600' 
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'}
-                    `}
+                    className={classNames(
+                      isActive
+                        ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md'
+                        : 'text-gray-700 hover:text-purple-700 hover:bg-white hover:shadow-md',
+                      'flex items-center gap-x-3 rounded-xl p-3 font-medium transition-all duration-200'
+                    )}
                   >
-                    <item.icon 
-                      className={`mr-3 h-5 w-5 flex-shrink-0 ${isActive ? 'text-primary-600' : 'text-gray-500'}`} 
-                    />
-                    {item.name}
+                    <div className={classNames(
+                      isActive 
+                        ? 'bg-white/20 text-white' 
+                        : 'bg-purple-100 text-purple-600 group-hover:bg-purple-200',
+                      'flex items-center justify-center w-8 h-8 rounded-lg transition-colors duration-200'
+                    )}>
+                      <item.icon className="h-5 w-5 shrink-0" />
+                    </div>
+                    <span>{item.name}</span>
                   </Link>
                 );
               })}
             </nav>
-            <div className="px-4 py-4 mt-auto border-t border-gray-200">
+            <div className="p-6 mt-auto border-t border-gray-100">
               <button
-                className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 hover:text-gray-900"
+                className="flex items-center w-full p-3 text-gray-700 rounded-xl hover:bg-white hover:shadow-md hover:text-purple-700 transition-all duration-200"
               >
-                <ArrowRightOnRectangleIcon className="w-5 h-5 mr-3 text-gray-500" />
-                Cerrar Sesión
+                <div className="flex items-center justify-center w-8 h-8 bg-red-100 text-red-600 rounded-lg">
+                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                </div>
+                <span className="ml-3 font-medium">Cerrar Sesión</span>
               </button>
             </div>
           </div>
@@ -157,19 +184,16 @@ export default function Layout() {
       </div>
 
       {/* Contenido principal */}
-      <div className="lg:pl-64">
-        <div className="sticky top-0 z-40 flex items-center h-16 px-4 bg-white border-b border-gray-200 shadow-sm shrink-0 gap-x-4 sm:gap-x-6 sm:px-6 lg:px-8">
+      <div className="lg:pl-72">
+        <div className="sticky top-0 z-40 flex items-center h-16 px-4 bg-white shadow-md shrink-0 gap-x-4 sm:gap-x-6 sm:px-6 lg:px-8">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            className="p-2 text-gray-700 rounded-md hover:bg-gray-100 lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Abrir sidebar</span>
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </button>
-
-          {/* Separador */}
-          <div className="w-px h-6 bg-gray-200 lg:hidden" aria-hidden="true" />
 
           {/* Título de la página actual */}
           <div className="flex-1">
@@ -180,24 +204,21 @@ export default function Layout() {
 
           {/* Perfil de usuario */}
           <div className="flex items-center gap-x-4 lg:gap-x-6">
-            <div className="relative flex items-center">
-              <Link
-                to="/profile"
-                className="flex items-center p-1.5 text-sm font-semibold text-gray-700 rounded-full bg-gray-50 hover:bg-gray-100"
-              >
-                <span className="hidden lg:block">Usuario</span>
-                <span className="flex items-center justify-center w-8 h-8 ml-2 text-white bg-primary-600 rounded-full">
-                  U
-                </span>
-              </Link>
-            </div>
+            <Link
+              to="/profile"
+              className="flex items-center p-1 text-sm font-semibold text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <span className="hidden lg:block mr-2">Usuario</span>
+              <div className="flex items-center justify-center w-8 h-8 text-white bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full shadow-sm">
+                <span>U</span>
+              </div>
+            </Link>
           </div>
         </div>
 
-        <main className="py-6">
-          <div className="px-4 sm:px-6 lg:px-8">
-            <Outlet />
-          </div>
+        {/* Contenido de la página */}
+        <main className="p-4 sm:p-6 lg:p-8">
+          <Outlet />
         </main>
       </div>
     </div>
